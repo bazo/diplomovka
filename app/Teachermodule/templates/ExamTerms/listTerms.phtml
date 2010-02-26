@@ -1,0 +1,35 @@
+/**
+ * @version listTerms.phtml 25.2.2010
+ */
+{block #css}
+    {include #parent}
+    <link type="text/css" href="{$basePath}/css/widgets/timepicker/ui.timepickr.css" rel="stylesheet" />
+    <link type="text/css" href="{$basePath}/css/widgets/timepicker/jquery.timepickr.css" rel="stylesheet" />
+    <link type="text/css" href="{$basePath}/css/widgets/numericupdown/ui.stepper.css" rel="stylesheet" />
+{/block}
+{block #js}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/widgets/timepicker/jquery.timepickr.min.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/timeeffects.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/widgets/numericupdown/jquery.mousewheel.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/widgets/numericupdown/ui.stepper.js"></script>
+{/block}
+{block #content}
+    <div id="sidebar_course_list">
+        {foreach $courses as $course_row}
+        <a href="{plink listTerms course_id => $course_row->id, course => $course_row->name}" title="{$course_row->name}">{$course_row->name}, {$course_row->year}, {$course_row->semester}</a>
+        {/foreach}
+    </div>
+    <h1>{$course}</h1>
+    <a href="{link addTerm! course_id => $course_id}" class="ajax add_new" title="{_'Add new term for %d', $course}"><div class="icon_add"></div><span>{_'Add term'}</span></a>
+    <ol>
+        {dump $course_terms}
+    {foreach $course_terms as $term}
+        <li><a href="{link termDetail term_id => $term->id}">{_'start'}: {$term->start_datetime}, {_'deadline'}: {$term->application_deadline}, {_'max_students'}: {$term->max_students}, {_'min seminar points'}: {$term->min_seminar_points}</a></li>
+    {/foreach}
+    </ol>
+{/block}
+@{block #popup}
+    <h2>{$course} - {_'new term'}</h2>
+    @{widget formAddTerm}
+@{/block}

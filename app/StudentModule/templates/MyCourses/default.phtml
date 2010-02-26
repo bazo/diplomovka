@@ -1,0 +1,9 @@
+/**
+ * @version default.phtml 25.2.2010
+ */
+
+{block #content}
+{foreach $courses as $course}
+    <a href="{plink listTerms course_id => $course->id, course => $course->name}" title="$course">{$course->name}, {$course->year}, {$course->semester}</a>
+    {/foreach}
+{/block}

@@ -1,0 +1,22 @@
+{block #css}
+	        <link type="text/css" href="{$basePath}/css/login.css" rel="stylesheet" />
+                <link type="text/css" href="{$basePath}/css/{$module}/login.css" rel="stylesheet" />
+{/block}
+{block #menu}
+{/block}
+{block #content}
+	<div id="small_module_chooser">
+		<ul>
+			<li>
+				<a href="{plink :Student:Login:default}"><div class="btn student">{_'Student'}</div></a>
+			</li>
+			<li>
+				<a href="{plink :Teacher:Login:default}"><div class="btn teacher">{_'Teacher'}</div></a>
+			</li>
+			<li>
+				<a href="{plink :Admin:Login:default}"><div class="btn teacher">{_'Admin'}</div></a>
+			</li>
+		</ul>
+	</div>
+	{widget formLogin}
+{/block}

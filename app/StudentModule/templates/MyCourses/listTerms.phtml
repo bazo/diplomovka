@@ -1,0 +1,26 @@
+{block #css}
+    {include #parent}
+    <link type="text/css" href="{$basePath}/css/widgets/datagrid/datagrid.css" rel="stylesheet" />
+{/block}
+{block #js}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/widgets/datagrid/datagrid.js"></script>
+{/block}
+@{block #content}
+    <div id="sidebar_course_list">
+        @{foreach $courses as $course_row}
+        <a href="{plink listTerms course_id => $course_row->id, course => $course_row->name}" title="{$course_row->name}">{$course_row->name}, {$course_row->year}, {$course_row->semester}</a>
+        @{/foreach}
+    </div>
+    <h1>{$course}</h1>
+    <ol>
+    @{foreach $terms as $exam}
+        <li><a href="{link showDetail! exam_id => $exam->id}">{_'start'}: {$exam->start_datetime}, {_'deadline'}: {$exam->application_deadline}, {_'max_students'}: {$exam->max_students}, {_'min seminar points'}: {$exam->min_seminar_points}</a></li>
+    @{/foreach}
+    </ol>
+@{/block}
+@{block #popupcontent}
+    <h2></h2>
+    <a href="{link applyForExam! exam_id => $exam_id}" class="ajax add_new" title="{_'Apply for exam from %d', $course}"><div class="icon_add"></div><span>{_'Apply'}</span></a>
+    @{widget studentsGrid}
+@{/block}

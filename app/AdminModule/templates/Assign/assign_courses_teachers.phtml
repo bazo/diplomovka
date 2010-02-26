@@ -1,0 +1,17 @@
+{block #css}
+{include #parent}
+<link type="text/css" href="{$basePath}/css/assign.css" rel="stylesheet" />
+<link type="text/css" href="{$basePath}/css/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+{/block}
+@{block #content}
+	{snippet form}
+	<div id="assigner">
+                        {widget formTeacherChooser}
+			{widget formTeachersCourses}
+		<div class="courses">
+                        {widget formYearSelect}
+			{widget coursesForm}
+		</div>
+	</div>
+	{/snippet}
+{/block}

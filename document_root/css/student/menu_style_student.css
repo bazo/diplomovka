@@ -1,0 +1,26 @@
+.menu{
+	background-color:#3b5999;
+	}
+.menu ul{
+	background-color:#3b5999;
+	}
+	.menu li a{
+		background-color:#3b5999;
+		color:#000;
+		}
+		.menu li a:hover, .menu ul li:hover a{
+			background-color: #2580a2;
+			color:#FFFFFF;
+			text-decoration:none;
+			}
+	.menu li ul{
+		background:#3b5999;
+		}
+		.menu li ul a:hover, .menu li ul li:hover a{
+			background-color:#2580a2;
+			color:#ffffff;
+			}
+.menu a.active {
+	background-color:#2580a2;
+}
+div.popup{border-color: #3b5999;}

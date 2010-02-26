@@ -1,0 +1,9 @@
+<div id="tables_browser">
+	<ol>
+		{foreach $tables as $table}
+			<li>
+				<a href="{plink default table => $table}">{$table|capitalize}</a>
+			</li>
+		{/foreach}
+	</ol>
+</div>

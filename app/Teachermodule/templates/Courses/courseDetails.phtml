@@ -1,0 +1,14 @@
+{block #content}
+	{include 'courses_browser.phtml'}
+	<div id="course_details">
+		<h1>{$course->name|capitalize}</h1>
+		<div>{$course->type} {$course->time} </div>
+	</div>
+	<div id="students">
+		<table>
+			{foreach $students as $student}
+				<tr><td>{$student->full_name}</td><td><a href="">{_'send message'}</a></td></tr>
+			{/foreach}
+		</table>
+	</div>
+{/block}

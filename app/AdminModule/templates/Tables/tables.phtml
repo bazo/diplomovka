@@ -1,0 +1,14 @@
+{block #css}
+{include #parent}
+<link type="text/css" href="{$basePath}/css/widgets/datagrid.css" rel="stylesheet" />
+{/block}
+{block #content}
+{include 'tables_browser.phtml'}
+<div id="table_view">
+	{if isset($selected_table)}
+		<h1>{_$selected_table|capitalize}</h1>
+		<a href="{plink addEntry $selected_table}">{_'New entry'}</a>
+		{widget grid}
+	{/if}
+</div>
+{/block}

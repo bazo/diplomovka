@@ -1,0 +1,6 @@
+div#assigner{
+	clear: both;
+}
+	div#assigner div.courses form{
+		float: left;
+	}

@@ -1,0 +1,24 @@
+input {
+	color: #000;
+}
+form#formLogin{
+	width: 380px; height: 200px; margin: auto auto; -moz-border-radius: 10px;
+}
+form#formLogin table{
+	width: 380px; height: 180px; text-align: center; margin-top: 20px;
+}
+form#formLogin table tr th{
+	text-align: center;
+}
+form#formLogin table tr td{
+	text-align: center;
+}
+form#formLogin table tr:last-child{
+	height: 70px;
+}
+form#formLogin table tr td input{
+	width: 80%; color: #666666;
+}
+form#formLogin {
+	background-color: #8bcc33;
+}

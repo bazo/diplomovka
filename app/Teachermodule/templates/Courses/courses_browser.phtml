@@ -1,0 +1,7 @@
+<div id="courses_browser">
+	<ul>
+		{foreach $courses as $course}
+			<li><a href="{plink courseDetails course => $course->id}">{_$course->name} - {$course->time}</a></li>
+		{/foreach}
+	</ul>
+</div>

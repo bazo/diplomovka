@@ -1,0 +1,39 @@
+<?php 
+class Authenticator implements IAuthenticator
+{
+    public function authenticate(array $credentials)
+    {
+        $email = $credentials['username'];
+        $password = $credentials['password'];
+        $role = String::lower($credentials['extra']);
+
+
+        switch ($role)
+        {
+            case 'student':
+                $student = new Student();
+                $student->email = $email;
+                $student->password = $password;
+                $student = EvidenciaStudentov::verifyStudent($student);
+                $student->courses = EvidenciaStudentov::getStudentCourses($student);
+                foreach ($student->courses as $course)
+                {
+                    $student->allowed_courses[] = (int)$course->id;
+                }
+                $identity = new Identity($student->id, $role, $student);
+            break;
+            case 'teacher':
+                $teacher = new Teacher();
+                $teacher->email = $email;
+                $teacher->password = $password;
+                $teacher = EvidenciaVyucujucich::verifyTeacher($teacher);
+                $teacher->courses = EvidenciaVyucujucich::getTeacherCourses($teacher);
+                $identity = new Identity($teacher->id, $role, $teacher);
+            break;
+            case 'admin':
+                $identity = new Identity('admin', $role);
+            break;
+        }
+        return $identity; // vrátíme identitu
+    }
+} 

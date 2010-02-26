@@ -1,0 +1,1 @@
+$(document).ready(function(){    $("form .ajax").live('submit',function (e) {        $(this).ajaxSubmit();        e.preventDefault();    });    /*    $("a.ajax").live("click", function (event) {    event.preventDefault();    $.get(this.href);});*/});
