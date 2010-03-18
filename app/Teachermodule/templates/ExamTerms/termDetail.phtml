@@ -1,9 +1,21 @@
 /**
  * @version termDetail.phtml 25.2.2010
  */
-
+{block #css}
+    {include #parent}
+    <link type="text/css" href="{$basePath}/css/widgets/datagrid/datagrid.css" rel="stylesheet" />
+{/block}
+{block #js}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/widgets/datagrid/datagrid.js"></script>
+{/block}
 {block #content}
 <div id="sidebar_course_list">
         
 </div>
+<h1>{_'List of students'}</h1>
+<div id="toolbar">
+    
+</div>
+{widget studentsGrid}
 {/block}

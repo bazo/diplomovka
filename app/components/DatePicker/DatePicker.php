@@ -52,7 +52,9 @@ class DatePicker extends /*Nette\Forms\*/TextInput
 	 */
 	public function setValue($value)
 	{
-		$value = preg_replace('~([0-9]{4})-([0-9]{2})-([0-9]{2})~', '$3.$2.$1', $value);
+                $date_time = new DateTime($value);
+                $value = date('j.m.Y', $date_time->getTimestamp());
+		//$value = preg_replace('~([0-9]{4})-([0-9]{2})-([0-9]{2})~', '$3.$2.$1', $value);
 		parent::setValue($value);
 	}
 

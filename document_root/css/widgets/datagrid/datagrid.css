@@ -1,6 +1,6 @@
 /********************** DataGrid *********************/
 table.datagrid {
-	width: 100%;
+	width: 100% !important;
 }
 tr.filters td *, tr.filters th{
 	text-align: center;
@@ -104,34 +104,6 @@ table.datagrid .icon{
 	float: none;
 	margin-left: 15px;
 }
-table.datagrid td.actions .icon-delete{
-	background: url(images/icons/remove.png) no-repeat;
-}
-table.datagrid td.actions .icon-edit{
-	background: url(images/icons/edit.png) no-repeat;
-}
-table.datagrid td.actions .icon-items{
-	background: url(images/icons/menu_item.png) no-repeat;
-}
-table.datagrid td.actions .icon-play{
-	background: url(images/icons/play.png) no-repeat;
-}
-table.datagrid td.actions .icon-stop{
-	background: url(images/icons/stop.png) no-repeat;
-}
-table.datagrid td.actions .icon-explode{
-	background: url(images/icons/explode.png) no-repeat;
-}
-table.datagrid td .icon-homepage{
-	background: url(images/icons/star.png) no-repeat;
-        margin: 0 auto;
-        display: block;
-}
-table.datagrid td:hover .icon-makehomepage{
-	background: url(images/icons/smiley_star.png) no-repeat;
-        display: block;
-        margin: 0 auto;
-}
 table.datagrid td.homepage-column{
     width: 32px;
     
@@ -228,7 +200,7 @@ table.datagrid .paginator, table.datagrid .operations, table.datagrid .grid-info
 	float: left;
 }
 table.datagrid .grid-info {
-	float: right;
+	
 }
 table.datagrid .paginator .paginator-controls {
 	float: left;
@@ -266,6 +238,30 @@ table.datagrid .inactive {
 	opacity: 0.40;
 	=filter: alpha(opacity=40);
 }
-table.datagrid tbody tr td a, table.datagrid tbody tr td:first-child{
+table.datagrid tbody tr td a, table.datagrid tbody tr td{
     font-size: 140%; font-weight: 800; color: #0085CC;
+}
+table.datagrid tbody tr{
+    width: 100%;
+}
+table.datagrid tbody tr td:first-child{
+    width: 10%;
+}
+table.datagrid tbody tr td{
+    width: 90%;
+}
+#snippet-studentsGrid-grid{
+    width: 100%;
+}
+form.datagrid{
+    width: 100%;
+}
+form.datagrid table tr.header{
+    display: none;
+}
+form.datagrid table tr.footer td{
+    width: 100%;
+}
+span.grid-info{
+    display: block; float: right;
 }

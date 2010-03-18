@@ -21,6 +21,19 @@ class TimePicker extends /*Nette\Forms\*/TextInput
 	}
 
 	/**
+	 * Sets control's value.
+	 * @param  string
+	 * @return void
+	 */
+	public function setValue($value)
+	{
+                $date_time = new DateTime($value);
+                $value = date('H:i', $date_time->getTimestamp());
+		//$value = preg_replace('~([0-9]{4})-([0-9]{2})-([0-9]{2})~', '$3.$2.$1', $value);
+		parent::setValue($value);
+	}
+
+	/**
 	 * Generates control's HTML element.
 	 * @return Html
 	 */

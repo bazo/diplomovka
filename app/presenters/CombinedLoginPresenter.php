@@ -36,7 +36,9 @@ class CombinedLoginPresenter extends BasePresenter
 				$this->redirect(":$module:default:default");
 			}
 			catch (AuthenticationException $e) {
-				$this->flashMessage('Error: '. $e->getMessage());
+				$this->flashMessage('Error: '. $e->getMessage(), 'error');
+                                $this->invalidateControl('flash');
+                                if(!$this->isAjax())$this->redirect('this');
 			}
 		}
 	}

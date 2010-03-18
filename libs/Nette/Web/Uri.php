@@ -182,28 +182,6 @@ class Uri extends FreezableObject
 
 
 	/**
-	 * @deprecated
-	 */
-	public function setPass($value)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use setPassword() instead.', E_USER_WARNING);
-		$this->setPassword($value);
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getPass()
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use getPassword() instead.', E_USER_WARNING);
-		return $this->pass;
-	}
-
-
-
-	/**
 	 * Sets the host part of URI.
 	 * @param  string
 	 * @return Uri  provides a fluent interface

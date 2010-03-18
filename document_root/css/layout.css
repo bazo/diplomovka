@@ -1,24 +1,127 @@
-#content {
-	width: 800px; margin: 0 auto;
+body{
+    display: table;
+    height: 100%;
+    margin: 0 auto;
+    width: 100%;
+}
+#formLogin{
+    -webkit-border-radius: 10px; border-radius: 10px;
+    -moz-border-radius: 10px;
+}
+#container{
+    width: 100%;
+    height: 100%;
+}
+#container #main{
+    width: 55%;
+    margin: 0 auto;
+}
+#container #main h1{
+    text-align: center;
+}
+#container #main #sidebar{
+    width: 30%;
+    height: 100%;
+    float: left;
+}
+#container #main #sidebar ul{
+    list-style-type: none;
+
+}
+#container #main #sidebar ul li{
+
+}
+#container #main #sidebar ul li a{
+    text-decoration: none;
+}
+#container #main #content {
+    width: 70%;
+    height: 100%;
+    float: right;
+}
+#container #main #content #calendar{
+    width: 55%;
+    margin: 0 auto;
+}
+#terms_list{
+    position: relative;
+    left: -60px;
+}
+#terms_list ol{
+    padding: 0;
+    color: #999999;
+}
+#terms_list ol li{
+    padding: 0;margin: 0;
+    height: 100%;
+    color: #000;
+}
+#terms_list .term{
+    border: 1px solid teal;
+    margin-bottom: 5px;
+    min-height: 150px;
+    float: none;
+    clear: both;
+}
+#terms_list .term .header{
+    width: 100%;
+    margin: 0;
+    margin-bottom: 5px;
+    background-color: teal;
+    padding-top: 10px;
+    padding-right: 0px;
+    padding-left: 0px;
+    color: #fff;
+    height: 30px;
+    display: block;
+}
+#terms_list .term .header .date{
+    float: left;
+    width: 80%;
+    color: #fff;
+}
+#terms_list .term .header a{
+    color: #fff; margin-left: 8px;
+}
+#terms_list .term .header .date a{
+    color: #fff;
+}
+#terms_list .term .header .date strong{
+    margin-right: 5px; color: #fff;
+}
+#terms_list .term strong{
+    margin-left: 10px;
+}
+#terms_list .left{
+    width: 60%; float: left;
+    height: 100px;
+}
+#terms_list .bottom{
+    width: 100%; clear: left; float: none;
+}
+#terms_list .right{
+    width: 40%; float: right;
+    height: 100px;
 }
 div#module_choose{
-	width: 100%; clear: both;
+    width: 100%; clear: both;
+    margin-top: 20%;
+    margin: 0 auto;
 }
 div#module_choose .btn{
-	min-width: 280px; min-height: 80px; -moz-border-radius: 10px; float: left; padding-top: 50px;  text-align: center;
-	margin-right: 20px;
+    min-width: 280px; min-height: 80px; -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px; float: left; padding-top: 50px;  text-align: center;
+    margin-right: 20px;
 }
 div#module_choose a{
-	text-decoration: none; text-transform: capitalize; font-size: 200%; color: #fff;
+    text-decoration: none; text-transform: capitalize; font-size: 200%; color: #fff;
 }
 div#module_choose .student{
-	background-color: #3b5999;
+    background-color: #3b5999;
 }
 div#module_choose .teacher{
-	background-color: #8bcc33;
+    background-color: #8bcc33;
 }
 input{
-    
     border: 1px solid #CCCCCC;
     padding-right: 20px;
     padding: 0.2em;
@@ -27,23 +130,27 @@ input.datepicker{
     background: transparent url('../images/calendar.png') no-repeat right;
 }
 .required {
-    color: darkred;
+    color: #8B0000;
 }
 #ui-datepicker-div{
     z-index: 250;
 }
 input[type="submit"]{
-	border: 1px solid #444444; background: #222222 url(../images/ui-bg_highlight-soft_35_222222_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #eeeeee; outline: none;
-	-moz-border-radius: 6px; -webkit-border-radius: 6px; padding: 5px;
+    border: 1px solid #444444; background: #222222 url(../images/ui-bg_highlight-soft_35_222222_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #eeeeee; outline: none;
+    -moz-border-radius: 6px; -webkit-border-radius: 6px; padding: 5px; color: #fff;
 }
 input[type="submit"]:hover{
-	border: 1px solid #0b93d5; background: #003147 url(../images/hover.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; outline: none;
-	cursor: pointer !important;
+    border: 1px solid #0b93d5; background: #003147 url(../images/hover.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; outline: none;
+    cursor: pointer !important;
 }
-#overlay{ position:absolute; top:0; left:0; width:100%; height: 100%; z-index:100; background-color: #000; opacity: 0.6; filter:alpha(opacity=60); -moz-opacity: 0.4;}
-div.popup{ position: absolute; height: auto; z-index:200; border:5px solid; background: #FFF; top: 5%; left: 30%; -moz-border-radius: 6px; -webkit-border-radius: 6px; padding: 10px;}
+#overlay{
+    position:fixed; top:0; left:0; width:100%; height: 100%; z-index:100; background-color: #000; opacity: 0.6; filter:alpha(opacity=60); -moz-opacity: 0.4;
+}
+div.popup{
+    position: fixed; height: auto; min-width: 500px; z-index:200; border:5px solid; background: #FFF; top: 5%; left: 30%; -moz-border-radius: 6px; -webkit-border-radius: 6px; padding: 10px;
+}
 div.popup .close_popup{
-	background: url(../images/close.png) no-repeat; position: absolute; width: 48px; height: 48px; top: -25px; right: -25px;
+    background: url(../images/close.png) no-repeat; position: absolute; width: 48px; height: 48px; top: -25px; right: -25px;
 }
 div.popup img{ border:none; margin:5px }
 div.popup h2{
@@ -85,6 +192,7 @@ a.add_new{
     height: 32px;
     text-decoration: none;
     font-size: 120%;
+    display: inline-block;
 }
 a.add_new span{
     position: relative;
@@ -96,6 +204,12 @@ a.add_new .icon_add{
     height: 32px;
     background: url('../images/add.png') top left no-repeat;
 }
+a.add_new .icon_remove{
+    display: block; float: left; clear: left;
+    width: 32px;
+    height: 32px;
+    background: url('../images/remove.png') top left no-repeat;
+}
 #snippet-studentsGrid-grid{
     width: 90% !important;
 }
@@ -103,5 +217,62 @@ a.add_new .icon_add{
     width: 100% !important;
 }
 #snippet-studentsGrid-grid form.datagrid table{
-    width: 50% !important;
+    width: 100%;
+}
+#snippet-studentsGrid-grid .flash{
+    display: none;
+}
+#calendar{
+    width: 100%;
+}
+div.flash{
+    min-width: 300px;
+    padding: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    min-height: 48px;
+    vertical-align: middle;
+    position: fixed;
+    z-index: 1000;
+    margin: 0 auto;
+    display: table-cell;
+}
+div.flash span{
+    position: relative;
+    display: block;
+    top: 15px;
+    font-weight: bold;
+}
+div.icon{
+    width: 48px;
+    height: 48px;
+    float: left;
+}
+div.icon-error{
+    background: url(../images/error.png) no-repeat;
+    background-color: #84002e;
+    border: 1px solid #84002e;
+}
+div.icon-warning{
+    background: url(../images/warning.png) no-repeat;
+}
+div.icon-success{
+    background: url(../images/success.png) no-repeat;
+}
+div.success{
+    background-color: #afd775;
+    border: 1px solid #5bc236;
+}
+div.warning{
+    background-color: #fdb813;
+    border: 1px solid #f17022;
+}
+div.error{
+    border: 1px solid #cd0a0a;
+    color: #fff;
+    background-color: #c0402a;
+}
+.no-label label{
+    visibility: hidden;
 }

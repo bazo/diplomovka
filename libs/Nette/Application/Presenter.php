@@ -19,7 +19,6 @@
  * @package    Nette\Application
  *
  * @property-read PresenterRequest $request
- * @property-read int $phase
  * @property-read array $signal
  * @property-read string $action
  * @property   string $view
@@ -29,13 +28,6 @@
  */
 abstract class Presenter extends Control implements IPresenter
 {
-	/**#@+ @deprecated */
-	const PHASE_STARTUP = 1;
-	const PHASE_SIGNAL = 3;
-	const PHASE_RENDER = 4;
-	const PHASE_SHUTDOWN = 5;
-	/**#@-*/
-
 	/**#@+ bad link handling {@link Presenter::$invalidLinkMode} */
 	const INVALID_LINK_SILENT = 1;
 	const INVALID_LINK_WARNING = 2;
@@ -57,20 +49,11 @@ abstract class Presenter extends Control implements IPresenter
 	/** @var array of function(Presenter $sender, IPresenterResponse $response = NULL); Occurs when the presenter is shutting down */
 	public $onShutdown;
 
-	/** @var bool (experimental) */
-	public $oldLayoutMode = TRUE;
-
-	/** @var bool (experimental) */
-	public $oldModuleMode = TRUE;
-
 	/** @var PresenterRequest */
 	private $request;
 
 	/** @var IPresenterResponse */
 	private $response;
-
-	/** @var int */
-	private $phase;
 
 	/** @var bool  automatically call canonicalize() */
 	public $autoCanonicalize = TRUE;
@@ -162,8 +145,7 @@ abstract class Presenter extends Control implements IPresenter
 	public function run(PresenterRequest $request)
 	{
 		try {
-			// PHASE 1: STARTUP
-			$this->phase = self::PHASE_STARTUP;
+			// STARTUP
 			$this->request = $request;
 			$this->payload = (object) NULL;
 			$this->setParent($this->getParent(), $request->getPresenterName());
@@ -184,23 +166,11 @@ abstract class Presenter extends Control implements IPresenter
 				$this->terminate();
 			}
 
-			// back compatibility
-			if (method_exists($this, 'beforePrepare')) {
-				$this->beforePrepare();
-				trigger_error('beforePrepare() is deprecated; use createComponent{Name}() instead.', E_USER_WARNING);
-			}
-			if ($this->tryCall('prepare' . $this->getView(), $this->params)) {
-				trigger_error('prepare' . ucfirst($this->getView()) . '() is deprecated; use createComponent{Name}() instead.', E_USER_WARNING);
-			}
-
-			// PHASE 2: SIGNAL HANDLING
-			$this->phase = self::PHASE_SIGNAL;
+			// SIGNAL HANDLING
 			// calls $this->handle<Signal>()
 			$this->processSignal();
 
-			// PHASE 3: RENDERING VIEW
-			$this->phase = self::PHASE_RENDER;
-
+			// RENDERING VIEW
 			$this->beforeRender();
 			// calls $this->render<View>()
 			$this->tryCall($this->formatRenderMethod($this->getView()), $this->params);
@@ -219,9 +189,6 @@ abstract class Presenter extends Control implements IPresenter
 			// continue with shutting down
 		} /* finally */ {
 
-			// PHASE 4: SHUTDOWN
-			$this->phase = self::PHASE_SHUTDOWN;
-
 			if ($this->isAjax()) try {
 				$hasPayload = (array) $this->payload; unset($hasPayload['state']);
 				if ($this->response instanceof RenderResponse && ($this->isControlInvalid() || $hasPayload)) { // snippets - TODO
@@ -238,22 +205,12 @@ abstract class Presenter extends Control implements IPresenter
 				$this->getFlashSession()->setExpiration($this->response instanceof RedirectingResponse ? '+ 30 seconds': '+ 3 seconds');
 			}
 
+			// SHUTDOWN
 			$this->onShutdown($this, $this->response);
 			$this->shutdown($this->response);
 
 			return $this->response;
 		}
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	final public function getPhase()
-	{
-		throw new DeprecatedException(__METHOD__ . '() is deprecated.');
-		return $this->phase;
 	}
 
 
@@ -316,11 +273,6 @@ abstract class Presenter extends Control implements IPresenter
 
 		} elseif (!$component instanceof ISignalReceiver) {
 			throw new BadSignalException("The signal receiver component '$this->signalReceiver' is not ISignalReceiver implementor.");
-		}
-
-		// auto invalidate
-		if ($this->oldLayoutMode && $component instanceof IRenderable) {
-			$component->invalidateControl();
 		}
 
 		$component->signalReceived($this->signal);
@@ -482,12 +434,7 @@ abstract class Presenter extends Control implements IPresenter
 				foreach ($files as $file) {
 					if (is_file($file)) {
 						$template->layout = $file;
-						if ($this->oldLayoutMode) {
-							$template->content = clone $template;
-							$template->setFile($file);
-						} else {
-							$template->_extends = $file;
-						}
+						$template->_extends = $file;
 						break;
 					}
 				}
@@ -512,27 +459,6 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatLayoutTemplateFiles($presenter, $layout)
 	{
-		if ($this->oldModuleMode) {
-			$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
-			$presenter = str_replace(':', 'Module/', $presenter);
-			$module = substr($presenter, 0, (int) strrpos($presenter, '/'));
-			$base = '';
-			if ($root === Environment::getVariable('appDir') . '/presenters') {
-				$base = 'templates/';
-				if ($module === '') {
-					$presenter = 'templates/' . $presenter;
-				} else {
-					$presenter = substr_replace($presenter, '/templates', strrpos($presenter, '/'), 0);
-				}
-			}
-			return array(
-				"$root/$presenter/@$layout.phtml",
-				"$root/$presenter.@$layout.phtml",
-				"$root/$module/$base@$layout.phtml",
-				"$root/$base@$layout.phtml",
-			);
-		}
-
 		$appDir = Environment::getVariable('appDir');
 		$path = '/' . str_replace(':', 'Module/', $presenter);
 		$pathP = substr_replace($path, '/templates', strrpos($path, '/'), 0);
@@ -556,22 +482,6 @@ abstract class Presenter extends Control implements IPresenter
 	 */
 	public function formatTemplateFiles($presenter, $view)
 	{
-		if ($this->oldModuleMode) {
-			$root = Environment::getVariable('templatesDir', Environment::getVariable('appDir') . '/templates'); // back compatibility
-			$presenter = str_replace(':', 'Module/', $presenter);
-			$dir = '';
-			if ($root === Environment::getVariable('appDir') . '/presenters') { // special supported case
-				$pos = strrpos($presenter, '/');
-				$presenter = $pos === FALSE ? 'templates/' . $presenter : substr_replace($presenter, '/templates', $pos, 0);
-				$dir = 'templates/';
-			}
-			return array(
-				"$root/$presenter/$view.phtml",
-				"$root/$presenter.$view.phtml",
-				"$root/$dir@global.$view.phtml",
-			);
-		}
-
 		$appDir = Environment::getVariable('appDir');
 		$path = '/' . str_replace(':', 'Module/', $presenter);
 		$pathP = substr_replace($path, '/templates', strrpos($path, '/'), 0);
@@ -605,16 +515,6 @@ abstract class Presenter extends Control implements IPresenter
 	protected static function formatRenderMethod($view)
 	{
 		return 'render' . $view;
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	protected function renderTemplate()
-	{
-		throw new DeprecatedException(__METHOD__ . '() is deprecated; use $presenter->sendTemplate() instead.');
 	}
 
 
@@ -655,16 +555,6 @@ abstract class Presenter extends Control implements IPresenter
 	protected function sendPayload()
 	{
 		$this->terminate(new JsonResponse($this->payload));
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public function getAjaxDriver()
-	{
-		throw new DeprecatedException(__METHOD__ . '() is deprecated; use $presenter->payload instead.');
 	}
 
 

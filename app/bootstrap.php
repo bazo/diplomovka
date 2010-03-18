@@ -1,5 +1,6 @@
 <?php
 require LIBS_DIR . '/Nette/loader.php';
+require LIBS_DIR.'/debug.php';
 Debug::enable(Debug::DEVELOPMENT, APP_DIR.'log/log.txt');
 Debug::enableProfiler();
 Environment::loadConfig();

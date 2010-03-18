@@ -5,11 +5,11 @@
  */
 
 /**
- * Description of EvidenciaVyucujucich
+ * Description of TeacherRegistry
  *
  * @author Martin
  */
-class EvidenciaVyucujucich
+class TeacherRegistry
 {
     public static function verifyTeacher(Teacher $teacher)
     {

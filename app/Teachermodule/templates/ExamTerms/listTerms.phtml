@@ -14,22 +14,50 @@
     <script type="text/javascript" src="{$basePath}/js/widgets/numericupdown/jquery.mousewheel.js"></script>
     <script type="text/javascript" src="{$basePath}/js/widgets/numericupdown/ui.stepper.js"></script>
 {/block}
-{block #content}
-    <div id="sidebar_course_list">
-        {foreach $courses as $course_row}
-        <a href="{plink listTerms course_id => $course_row->id, course => $course_row->name}" title="{$course_row->name}">{$course_row->name}, {$course_row->year}, {$course_row->semester}</a>
-        {/foreach}
+@{block #sidebar}
+    <div class="course_list">
+        <ul>
+        @{foreach $courses as $course_row}
+        <li>
+            <a href="{plink listTerms course_id => $course_row->id, course => $course_row->name}" title="{$course_row->name}">{$course_row->name}, {$course_row->year}, {$course_row->semester}</a>
+        </li>
+        @{/foreach}
+        </ul>
     </div>
-    <h1>{$course}</h1>
+@{/block}
+{assign $heading $course}
+@{block #content}
+    
+   
     <a href="{link addTerm! course_id => $course_id}" class="ajax add_new" title="{_'Add new term for %d', $course}"><div class="icon_add"></div><span>{_'Add term'}</span></a>
+    <div id="terms_list">
     <ol>
-        {dump $course_terms}
-    {foreach $course_terms as $term}
-        <li><a href="{link termDetail term_id => $term->id}">{_'start'}: {$term->start_datetime}, {_'deadline'}: {$term->application_deadline}, {_'max_students'}: {$term->max_students}, {_'min seminar points'}: {$term->min_seminar_points}</a></li>
-    {/foreach}
+    @{foreach $course_terms as $term}
+        <li>
+            <a href="{link termDetail term_id => $term->id}">
+                <div class="term">
+                    <p class="header">
+                        <span class="date"><strong>{_'start'}:</strong>{$term->start_datetime|date:'%d.%m.%Y %H:%M'}</span>
+                        <a href="{link editTerm! exam_id => $term->id}" class="ajax">{_'Edit'}</a>
+                        <a href="{link deleteTerm! exam_id => $term->id}" class="ajax">{_'Delete'}</a>
+                    </p>
+                    <strong>{_'deadline'}:</strong> {$term->application_deadline|date:'%d.%m.%Y %H:%M'} <strong>{_'max students'}:</strong> {$term->max_students}
+                    <p>
+                        <strong>{_'min seminar points'}:</strong> {$term->min_seminar_points}
+                    </p>
+                </div>
+            </a>
+        </li>
+    @{/foreach}
     </ol>
-{/block}
+    </div>
+@{/block}
 @{block #popup}
-    <h2>{$course} - {_'new term'}</h2>
-    @{widget formAddTerm}
+    <h2>{$course} - {if isset($edit)}{_'edit term'}{else}{_'new term'}{/if}</h2>
+    {snippet popup_flash}
+            @{foreach $flashes as $flash}
+                <div class="flash {$flash->type}">{$flash->message}</div>
+            @{/foreach}
+        {/snippet}
+    {widget formAddTerm}
 @{/block}

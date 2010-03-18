@@ -58,11 +58,11 @@ class AppForm extends Form implements ISignalReceiver
 	protected function attached($presenter)
 	{
 		if ($presenter instanceof Presenter) {
-				$this->setAction(new Link(
-					$presenter,
-					$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
-					array()
-				));
+			$this->setAction(new Link(
+				$presenter,
+				$this->lookupPath('Nette\Application\Presenter') . self::NAME_SEPARATOR . 'submit!',
+				array()
+			));
 
 			// fill-in the form with HTTP data
 			if ($this->isSubmitted()) {

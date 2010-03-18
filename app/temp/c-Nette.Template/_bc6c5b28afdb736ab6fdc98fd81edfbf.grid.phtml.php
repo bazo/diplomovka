@@ -1,8 +1,10 @@
-<?php //netteCache[01]000203a:2:{s:4:"time";s:21:"0.33204300 1267142832";s:9:"callbacks";a:1:{i:0;a:3:{i:0;a:2:{i:0;s:5:"Cache";i:1;s:9:"checkFile";}i:1;s:48:"D:\www\skusky\app\components\Datagrid/grid.phtml";i:2;i:1266605459;}}}?><?php
+<?php //netteCache[01]000203a:2:{s:4:"time";s:21:"0.69509300 1267235076";s:9:"callbacks";a:1:{i:0;a:3:{i:0;a:2:{i:0;s:5:"Cache";i:1;s:9:"checkFile";}i:1;s:48:"D:\www\skusky\app\components\Datagrid/grid.phtml";i:2;i:1263349006;}}}?><?php
 // file D:\www\skusky\app\components\Datagrid/grid.phtml
 //
 
-$_cb = LatteMacros::initRuntime($template, NULL, 'c7fb9ae219'); unset($_extends);
+$_cb = LatteMacros::initRuntime($template, NULL, 'fc280d5fed'); unset($_extends);
+
+if (isset($presenter, $control) && $presenter->isAjax()) { LatteMacros::renderSnippets($control, $_cb, get_defined_vars()); }
 
 if (SnippetHelper::$outputAllowed) {
 } if ($_cb->foo = SnippetHelper::create($control, "grid")) { $_cb->snippets[] = $_cb->foo ?>

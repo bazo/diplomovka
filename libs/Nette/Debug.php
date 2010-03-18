@@ -600,8 +600,8 @@ final class Debug
 						break;
 					}
 				}
-				$file = dirname(self::$logFile) . "/exception " . @date('Y-m-d H-i-s') . " $hash.html";
-				if (empty($skip) && self::$logHandle = @fopen($file, 'x')) {
+				$file = 'compress.zlib://' . dirname(self::$logFile) . "/exception " . @date('Y-m-d H-i-s') . " $hash.html.gz";
+				if (empty($skip) && self::$logHandle = @fopen($file, 'w')) {
 					ob_start(); // double buffer prevents sending HTTP headers in some PHP
 					ob_start(array(__CLASS__, '_writeFile'), 1);
 					self::_paintBlueScreen($exception);
@@ -862,20 +862,6 @@ final class Debug
 
 
 	/**
-	 * Sends variable dump to Firebug tab request/server.
-	 * @param  mixed  variable to dump
-	 * @param  string unique key
-	 * @return mixed  variable itself
-	 */
-	public static function fireDump($var, $key)
-	{
-		self::fireSend(2, array((string) $key => $var));
-		return $var;
-	}
-
-
-
-	/**
 	 * Sends message to Firebug console.
 	 * @param  mixed   message to log
 	 * @param  string  priority of message (LOG, INFO, WARN, ERROR, GROUP_START, GROUP_END)
@@ -905,7 +891,7 @@ final class Debug
 			$label = $message;
 			$message = NULL;
 		}
-		return self::fireSend(1, self::replaceObjects(array(array('Type' => $priority, 'Label' => $label), $message)));
+		return self::fireSend('FirebugConsole/0.1', self::replaceObjects(array(array('Type' => $priority, 'Label' => $label), $message)));
 	}
 
 
@@ -913,11 +899,11 @@ final class Debug
 	/**
 	 * Performs Firebug output.
 	 * @see http://www.firephp.org
-	 * @param  int     structure index
+	 * @param  string  structure
 	 * @param  array   payload
 	 * @return bool    was successful?
 	 */
-	private static function fireSend($index, $payload)
+	private static function fireSend($struct, $payload)
 	{
 		if (self::$productionMode) return NULL;
 
@@ -926,12 +912,9 @@ final class Debug
 		header('X-Wf-Protocol-nette: http://meta.wildfirehq.org/Protocol/JsonStream/0.2');
 		header('X-Wf-nette-Plugin-1: http://meta.firephp.org/Wildfire/Plugin/FirePHP/Library-FirePHPCore/0.2.0');
 
-		if ($index === 1) {
-			header('X-Wf-nette-Structure-1: http://meta.firephp.org/Wildfire/Structure/FirePHP/FirebugConsole/0.1');
-
-		} elseif ($index === 2) {
-			header('X-Wf-nette-Structure-2: http://meta.firephp.org/Wildfire/Structure/FirePHP/Dump/0.1');
-		}
+		static $structures;
+		$index = isset($structures[$struct]) ? $structures[$struct] : ($structures[$struct] = count($structures) + 1);
+		header("X-Wf-nette-Structure-$index: http://meta.firephp.org/Wildfire/Structure/FirePHP/$struct");
 
 		$payload = json_encode($payload);
 		static $counter;

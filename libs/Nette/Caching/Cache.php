@@ -32,9 +32,6 @@ class Cache extends Object implements ArrayAccess
 	const ALL = 'all';
 	/**#@-*/
 
-	/** @deprecated */
-	const REFRESH = 'sliding';
-
 	/** @ignore internal */
 	const NAMESPACE_SEPARATOR = "\x00";
 

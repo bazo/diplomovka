@@ -1,6 +1,18 @@
 /**
  * @version default.phtml 26.2.2010
  */
-
+{assign $heading 'Calendar'}
+{block #css}
+    {include #parent}
+    <link type="text/css" href="{$basePath}/css/widgets/calendar/fullcalendar.css" rel="stylesheet" />
+    <link type="text/css" href="{$basePath}/css/widgets/datagrid/datagrid.css" rel="stylesheet" />
+{/block}
+{block #js}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/widgets/calendar/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/widgets/calendar/calendar.js"></script>
+    <script type="text/javascript" src="{$basePath}/js/widgets/datagrid/datagrid.js"></script>
+{/block}
 {block #content}
+<div id="calendar" data-event_url="{$event_url}"><noscript>{_'To show the calendar you need to enable javascript'}</noscript></div>
 {/block}

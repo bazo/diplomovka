@@ -23,6 +23,7 @@ class Translator implements ITranslator
 		if($msg == String::lower($msg)) return 'lower';
 		if($msg == String::upper($msg)) return 'upper';
 		if($msg == String::capitalize($msg)) return 'capitalize';
+                if($msg == ucfirst($msg)) return 'firstUpper';
 		return 'default';
 	}
 	
@@ -50,7 +51,11 @@ class Translator implements ITranslator
             }
                     if ($case == 'default') {
                             return $message;
-                    }else
+                    }elseif($case == 'firstUpper')
+                    {
+                        return ucfirst($message);
+                    }
+                    else
                     return call_user_func(array('String', $case), $message);
 	}
 	

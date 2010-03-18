@@ -137,6 +137,18 @@ class User extends Object implements IUser
 
 
 	/**
+	 * Returns current user ID, if any.
+	 * @return mixed
+	 */
+	public function getId()
+	{
+		$identity = $this->getIdentity();
+		return $identity ? $identity->getId() : NULL;
+	}
+
+
+
+	/**
 	 * Sets authentication handler.
 	 * @param  IAuthenticator
 	 * @return User  provides a fluent interface

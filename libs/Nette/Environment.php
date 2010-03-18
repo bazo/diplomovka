@@ -36,7 +36,7 @@ final class Environment
 	private static $configurator;
 
 	/** @var string  the mode of current application */
-	private static $mode = array();
+	private static $modes = array();
 
 	/** @var ArrayObject */
 	private static $config;
@@ -45,10 +45,10 @@ final class Environment
 	private static $serviceLocator;
 
 	/** @var array */
-	private static $vars = array(
+	private static $vars = array( // all deprecated
 		'encoding' => array('UTF-8', FALSE),
 		'lang' => array('en', FALSE),
-		'cacheBase' => array('%tempDir%', TRUE), // deprecated
+		'cacheBase' => array('%tempDir%', TRUE),
 		'tempDir' => array('%appDir%/temp', TRUE),
 		'logDir' => array('%appDir%/log', TRUE),
 	);
@@ -142,12 +142,12 @@ final class Environment
 	 * Sets the mode.
 	 *
 	 * @param  string mode identifier
-	 * @param  bool   set or unser
+	 * @param  bool   set or unset
 	 * @return void
 	 */
 	public static function setMode($mode, $value = TRUE)
 	{
-		self::$mode[$mode] = (bool) $value;
+		self::$modes[$mode] = (bool) $value;
 	}
 
 
@@ -160,11 +160,11 @@ final class Environment
 	 */
 	public static function getMode($mode)
 	{
-		if (isset(self::$mode[$mode])) {
-			return self::$mode[$mode];
+		if (isset(self::$modes[$mode])) {
+			return self::$modes[$mode];
 
 		} else {
-			return self::$mode[$mode] = self::getConfigurator()->detect($mode);
+			return self::$modes[$mode] = self::getConfigurator()->detect($mode);
 		}
 	}
 
@@ -188,16 +188,6 @@ final class Environment
 	public static function isProduction()
 	{
 		return self::getMode('production');
-	}
-
-
-
-	/**
-	 * @deprecated
-	 */
-	public static function isDebugging()
-	{
-		throw new DeprecatedException;
 	}
 
 

@@ -1,88 +1,116 @@
-.menu{
-	border:none;
-	border:0px;
-	margin:0px;
-	padding:0px;
-	font: 67.5% "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
-	font-size:14px;
-	font-weight:bold;
-	height: 40px;
-	}
-.menu ul{
-	height:40px;
-	list-style:none;
-	margin:0;
-	padding:0;
-	}
-	.menu li{
-		float:left;
-		padding:0px;
-		}
-	.menu li a{
-		background:url("../images/seperator.gif") bottom right no-repeat;
-		display:block;
-		font-weight:normal;
-		line-height:35px;
-		margin:0px;
-		padding:0px 25px;
-		text-align:center;
-		text-decoration:none;
-		}
-		.menu li a:hover, .menu ul li:hover a{
-			background: url("../images/hover.gif") bottom center no-repeat;
-			color:#FFFFFF;
-			text-decoration:none;
-			}
-	.menu li ul{
-		display:none;
-		height:auto;
-		padding:0px;
-		margin:0px;
-		border:0px;
-		position:absolute;
-		width:225px;
-		z-index:200;
-		}
-	.menu li:hover ul{
-		display:block;
-		
-		}
-	.menu li li {
-		background:url('../images/sub_sep.gif') bottom left no-repeat;
-		display:block;
-		float:none;
-		margin:0px;
-		padding:0px;
-		width:225px;
-		}
-	.menu li:hover li a{
-		background:none;
-		
-		}
-	.menu li ul a{
-		display:block;
-		height:35px;
-		font-size:12px;
-		font-style:normal;
-		margin:0px;
-		padding:0px 10px 0px 15px;
-		text-align:left;
-		}
-		.menu li ul a:hover, .menu li ul li:hover a{
-			background:url('../images/hover_sub.gif') center left no-repeat;
-			border:0px;
-			color:#ffffff;
-			text-decoration:none;
-			}
-	.menu p{
-		clear:left;
-		}	
-.menu div#navigation {
-  width: 65%; height: 40px; float: left; text-align: center; margin: 0 auto;
+.menu {
+border:0;
+font:67.5% "Lucida Sans Unicode", "Bitstream Vera Sans", "Trebuchet Unicode MS", "Lucida Grande", Verdana, Helvetica, sans-serif;
+font-size:14px;
+font-weight:700;
+height:40px;
+margin:0;
+padding:0;
 }
+
+.menu ul {
+height:40px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.menu li {
+float:left;
+padding:0;
+}
+
+.menu li a {
+background:url(../images/seperator.gif) bottom right no-repeat;
+display:block;
+font-weight:400;
+line-height:39px;
+margin:0;
+padding:0 25px;
+text-align:center;
+text-decoration:none;
+}
+.menu div#navigation {
+float:left;
+height:40px;
+margin:0 auto;
+text-align:center;
+width:60%;
+}
+
 .menu div#lang_menu {
-  height: 40px; width: 15%; float: left;
+    float: left;
+    height:40px;
 }
 .menu div#user_menu {
-  width: 20%; height: 40px; float: right;
+float:right;
+height:40px;
+margin-left:50px;
+}
+
+.menu div#user_menu li span {
+background:url(../images/seperator.gif) bottom right no-repeat;
+display:block;
+font-weight:400;
+height:39px;
+line-height:39px;
+margin:0;
+padding:0 25px;
+text-align:center;
+text-decoration:none;
+}
+
+.menu li a:hover,.menu ul li:hover a {
+background:url(../images/hover.gif) bottom center no-repeat;
+color:#FFF;
+text-decoration:none;
+}
+
+.menu li ul {
+border:0;
+display:none;
+height:auto;
+margin:0;
+padding:0;
+position:absolute;
+width:225px;
+z-index:200;
+}
+
+.menu li:hover ul {
+display:block;
+}
+
+.menu li li {
+background:url(../images/sub_sep.gif) bottom left no-repeat;
+display:block;
+float:none;
+margin:0;
+padding:0;
+width:225px;
+}
+
+.menu li:hover li a {
+background:none;
+}
+
+.menu li ul a {
+display:block;
+font-size:12px;
+font-style:normal;
+height:39px;
+margin:0;
+padding:0 10px 0 15px;
+text-align:left;
+}
+
+.menu li ul a:hover,.menu li ul li:hover a {
+background:url(../images/hover_sub.gif) center left no-repeat;
+border:0;
+color:#fff;
+text-decoration:none;
+}
+
+.menu p {
+clear:left;
 }

@@ -6,21 +6,65 @@
     {include #parent}
     <script type="text/javascript" src="{$basePath}/js/widgets/datagrid/datagrid.js"></script>
 {/block}
-@{block #content}
-    <div id="sidebar_course_list">
+@{block #sidebar}
+<div id="sidebar">
+    <div class="course_list">
+        <ul>
         @{foreach $courses as $course_row}
-        <a href="{plink listTerms course_id => $course_row->id, course => $course_row->name}" title="{$course_row->name}">{$course_row->name}, {$course_row->year}, {$course_row->semester}</a>
+        <li>
+            <a href="{plink listTerms course_id => $course_row->id, course => $course_row->name}" title="{$course_row->name}">{$course_row->name}, {$course_row->year}, {$course_row->semester}</a>
+        </li>
         @{/foreach}
+        </ul>
     </div>
-    <h1>{$course}</h1>
-    <ol>
-    @{foreach $terms as $exam}
-        <li><a href="{link showDetail! exam_id => $exam->id}">{_'start'}: {$exam->start_datetime}, {_'deadline'}: {$exam->application_deadline}, {_'max_students'}: {$exam->max_students}, {_'min seminar points'}: {$exam->min_seminar_points}</a></li>
-    @{/foreach}
-    </ol>
+</div>
 @{/block}
-@{block #popupcontent}
+{assign $heading $course}
+@{block #content}
+<div id="content">
+    <div id="terms_list">
+    <ol>
+    {snippet terms}
+    @{foreach $terms as $exam}
+        <li>
+            
+                <div class="term">
+                    <p class="header">
+                        <span class="date"><strong>{_'start'}:</strong>{$exam->start_datetime|date:'%d.%m.%Y %H:%M'}</span>
+                    </p>
+                    <div class="left">
+                    <p><strong>{_'deadline'}:</strong> {$exam->application_deadline|date:'%d.%m.%Y %H:%M'}{*<strong>{_'max students'}:</strong> {$exam->max_students} *}<strong>{_'free places'}:</strong> {$exam->max_students - $exam->students_applied}</p>
+                    <p>
+                        {*<strong>{_'min seminar points'}:</strong> {$exam->min_seminar_points}*}
+                    </p>
+                    </div>
+                    <div class="right">
+                        {if ($exam->my_id !== null)}<div class="icon icon-success"></div><br /><br /><br /><br /><br />
+                        <a href="{link cancelApplication! exam_id => $exam->id, popup => false}" class="ajax add_new" title="{_'Cancel application for exam from %d', $course}"><div class="icon_remove"></div><span>{_'Cancel application'}</span></a>
+                        {/if}
+                        {if ($exam->my_id == null and $exam->max_students - $exam->students_applied != 0)}
+                        <a href="{link applyForExam! exam_id => $exam->id, popup => false}" class="ajax add_new" title="{_'Apply for exam from %d', $course}"><div class="icon_add"></div><span>{_'Apply'}</span></a>
+                        {/if}
+                        {if $exam->max_students - $exam->students_applied == 0}
+                        <p><strong>{_'Term full'}</strong></p>
+                        {/if}
+                    </div>
+                    <p class="bottom"><a class="ajax" href="{link showDetail! exam_id => $exam->id}">{_'List of applied students'}</a></p>
+                </div>
+            
+        </li>
+    @{/foreach}
+    {/snippet}
+    </ol>
+    </div>
+</div>
+@{/block}
+@{block #popup}
     <h2></h2>
-    <a href="{link applyForExam! exam_id => $exam_id}" class="ajax add_new" title="{_'Apply for exam from %d', $course}"><div class="icon_add"></div><span>{_'Apply'}</span></a>
-    @{widget studentsGrid}
+    {if $isStudentOnList == true}
+        <a href="{link cancelApplication! exam_id => $exam_id}" class="ajax add_new" title="{_'Cancel application for exam from %d', $course}"><div class="icon_remove"></div><span>{_'Cancel application'}</span></a>
+    {else}
+        <a href="{link applyForExam! exam_id => $exam_id}" class="ajax add_new" title="{_'Apply for exam from %d', $course}"><div class="icon_add"></div><span>{_'Apply'}</span></a>
+    {/if}
+    {widget studentsGrid}
 @{/block}

@@ -17,8 +17,8 @@ form#formLogin table tr:last-child{
 	height: 70px;
 }
 form#formLogin table tr td input{
-	width: 80%; color: #666666;
+	width: 80%;
 }
-form#formLogin {
-	background-color: {$background-color};
+form#formLogin table tr.required th label{
+    color: #000;
 }

@@ -3,15 +3,15 @@ class Student_DefaultPresenter extends Student_BasePresenter
 {
     public function actionDefault()
     {
-
+        $this->template->event_url = $this->link('getEvents!');
     }
 
-    public function createComponentStudentsGrid($name)
+    public function handleGetEvents()
     {
-        $grid = new DataGrid($this, $name);
-        $examStudentList = ExamStudentListManager::getList(2);
-        $grid->bindDataTable($examStudentList->dataSource);
-        return $grid;
+        $student = $this->getUser()->getIdentity()->student;
+        $events = EventManager::getEvents($student);
+        fd($events);
+        $this->terminate( new JsonResponse($events) );
     }
 }
 ?>

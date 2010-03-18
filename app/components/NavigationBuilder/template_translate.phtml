@@ -3,16 +3,16 @@
  * @param ArrayList $items
  *}
 
-		{foreach $items as $item}
-			{if $iterator->isFirst()}
-				<ul>
-			{/if}
-			<li><a href="{$item->url}">{_$item->label}</a>
-			{if count($item->items)}
-				{include $template->getFile() 'items' => $item->items}
-			{/if}
-			</li>
-			{if $iterator->isLast()}
-				</ul>
-			{/if}
-		{/foreach}
+{foreach $items as $item}
+        {if $iterator->isFirst()}
+                <ul>
+        {/if}
+        <li><a href="{$item->url}">{_$item->label}</a>
+        {if count($item->items)}
+                {include $template->getFile() 'items' => $item->items}
+        {/if}
+        </li>
+        {if $iterator->isLast()}
+                </ul>
+        {/if}
+{/foreach}

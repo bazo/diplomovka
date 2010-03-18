@@ -8,8 +8,8 @@ class BasePresenter extends Presenter
   
   public function startup()
   {
-    $this->oldLayoutMode = false;
-    $this->oldModuleMode = false;
+    //$this->oldLayoutMode = false;
+    //$this->oldModuleMode = false;
     parent::startup();
     $application = Environment::getApplication();
     if (!isset($this->lang))

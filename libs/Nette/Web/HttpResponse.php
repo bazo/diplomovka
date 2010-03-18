@@ -185,15 +185,6 @@ final class HttpResponse extends Object implements IHttpResponse
 
 
 
-	/** @deprecated */
-	public function expire($seconds)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use setExpiration() instead.', E_USER_WARNING);
-		$this->setExpiration($seconds);
-	}
-
-
-
 	/**
 	 * Checks if headers have been sent.
 	 * @return bool

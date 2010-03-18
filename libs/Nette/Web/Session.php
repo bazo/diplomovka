@@ -23,9 +23,6 @@ class Session extends Object
 	/** Default file lifetime is 3 hours */
 	const DEFAULT_FILE_LIFETIME = 10800;
 
-	/** @var callback  Validation key generator */
-	public $verificationKeyGenerator;
-
 	/** @var bool  is required session ID regeneration? */
 	private $regenerationNeeded;
 
@@ -57,13 +54,6 @@ class Session extends Object
 
 
 
-	public function __construct()
-	{
-		$this->verificationKeyGenerator = array($this, 'generateVerificationKey');
-	}
-
-
-
 	/**
 	 * Starts and initializes session data.
 	 * @throws InvalidStateException
@@ -78,12 +68,6 @@ class Session extends Object
 			throw new InvalidStateException('A session had already been started by session.auto-start or session_start().');
 		}
 
-
-		// additional protection against Session Hijacking & Fixation
-		$verKey = NULL;
-		if ($this->verificationKeyGenerator) {
-			$verKey = (string) callback($this->verificationKeyGenerator)->invoke();
-		}
 
 		// start session
 		try {
@@ -106,31 +90,20 @@ class Session extends Object
 		}
 
 		/* structure:
-			__NF: VerificationKey, Counter, BrowserKey, Data, Meta
+			__NF: Counter, BrowserKey, Data, Meta
 				DATA: namespace->variable = data
 				META: namespace->variable = Timestamp, Browser, Version
 		*/
 
+		unset($_SESSION['__NT'], $_SESSION['__NS'], $_SESSION['__NM']); // old unused structures
+
 		// initialize structures
-		if (!isset($_SESSION['__NF']['V'])) { // new session
-			$_SESSION['__NF'] = array();
-			$_SESSION['__NF']['C'] = 0;
-			$_SESSION['__NF']['V'] = $verKey;
-
-		} else {
-			$saved = & $_SESSION['__NF']['V'];
-			if (!$this->verificationKeyGenerator || $verKey === $saved) { // ignored or verified
-				$_SESSION['__NF']['C']++;
-
-			} else { // session attack?
-				session_regenerate_id(TRUE);
-				$_SESSION = array();
-				$_SESSION['__NF']['C'] = 0;
-				$_SESSION['__NF']['V'] = $verKey;
-			}
-		}
 		$nf = & $_SESSION['__NF'];
-		unset($_SESSION['__NT'], $_SESSION['__NS'], $_SESSION['__NM']); // old structures
+		if (empty($nf)) { // new session
+			$nf = array('C' => 0);
+		} else {
+			$nf['C']++;
+		}
 
 		// browser closing detection
 		$browserKey = $this->getHttpRequest()->getCookie('nette-browser');
@@ -285,25 +258,6 @@ class Session extends Object
 	public function getName()
 	{
 		return session_name();
-	}
-
-
-
-	/**
-	 * Generates key as protection against Session Hijacking & Fixation.
-	 * @return string
-	 */
-	public function generateVerificationKey()
-	{
-		$httpRequest = $this->getHttpRequest();
-		$key[] = $httpRequest->getHeader('Accept-Charset');
-		$key[] = $httpRequest->getHeader('Accept-Encoding');
-		$key[] = $httpRequest->getHeader('Accept-Language');
-		$key[] = $httpRequest->getHeader('User-Agent');
-		if (strpos($key[3], 'MSIE 8.0')) { // IE 8 AJAX bug
-			$key[2] = substr($key[2], 0, 2);
-		}
-		return md5(implode("\0", $key));
 	}
 
 

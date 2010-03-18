@@ -105,7 +105,7 @@ class MemcachedStorage extends Object implements ICacheStorage
 		}
 
 		$meta = array(
-			self::META_DATA => $data,
+			self::META_DATA => $data instanceof Callback || $data instanceof Closure ? $data->__invoke() : $data,
 		);
 
 		$expire = 0;

@@ -1,1 +1,87 @@
-{extends ../../templates/@layout.phtml}
+{**
+ * Diplomovy projekt template.
+ *
+ * @copyright  Copyright (c) 2009 Martin Bazik
+ * @package    Skusky
+ *
+ * @param string   $title    page title
+ * @param string   $robots   tell robots how to index the content of a page (optinal)
+ * @param string   $basePath  web base URI
+ * @param array    $flashes  flash messages
+ * @param Template $content  view template
+ *}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="description" content="Diplomovy projekt" />
+	<meta name="robots" content="NOINDEX, NOFOLLOW">
+
+	<title>{_$module}{if isset($title)} - {_$title}{/if}</title>
+  {block #css}
+        <link type="text/css" href="{$basePath}/css/layout.css" rel="stylesheet" />
+        <link type="text/css" href="{$basePath}/css/menu_style.css" rel="stylesheet" />
+        <link type="text/css" href="{$basePath}/css/{$module|lower}/menu_style_{$module|lower}" rel="stylesheet" />
+        <link type="text/css" href="{$basePath}/css/jqueryui/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+  {/block}
+  {block #js}
+          <script type="text/javascript" src="{$basePath}/js/jquery-1.4.2.min.js"></script>
+          <script type="text/javascript" src="{$basePath}/js/jquery-ui-1.7.2.custom.min.js"></script>
+          <script type="text/javascript" src="{$basePath}/js/jquery.ajaxform.js"></script>
+          <script type="text/javascript" src="{$basePath}/js/jquery.livequery.js"></script>
+          <script type="text/javascript" src="{$basePath}/js/jquery.nette.js"></script>
+          <script type="text/javascript" src="{$basePath}/js/effects.js"></script>
+          <script type="text/javascript" src="{$basePath}/js/LiveFormValidation.js"></script>
+  {/block}
+</head>
+<body>
+    <div id="container">
+        <div class="menu">
+            @{block #menu}
+            <div id="navigation">
+                @{widget menu}
+            </div>
+            <div id="lang_menu">
+                <ul>
+                    <li><a href="{plink this 'lang' => 'sk'}">SK</a></li>
+                    <li><a href="{plink this 'lang' => 'en'}">EN</a></li>
+                </ul>
+            </div>
+            <div id="user_menu">
+                <ul>
+                    <li><span>semester: {$semester}</span></li>
+                    <li><span>{$user->name} {$user->surname}</span></li>
+                    <li><a href="{link logout!}">{_'logout'}</a></li>
+                </ul>
+            </div>
+            @{/block}
+	</div>
+
+        <div id="main">
+            <h1>{_$heading}</h1>
+                @{block #sidebar}
+                @{/block}
+            
+            @{include #content}
+        </div>
+    </div>
+    {snippet flash}
+                @{foreach $flashes as $flash}
+                    <div class="flash {$flash->type}"><div class="icon icon-{$flash->type}"></div><span>{_$flash->message}</span></div>
+                @{/foreach}
+            {/snippet}
+    
+</body>
+{snippet popup}
+        @{if isset($show_popup) and $show_popup == true}
+            <div id="overlay"></div>
+            <div class="popup">
+            <a href="{link closePopup!}" class="ajax"><div class="close_popup"></div></a>
+                @{block #popup}
+                @{/block}
+             </div>
+        @{/if}
+    {/snippet}
+    
+</html>

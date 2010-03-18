@@ -538,23 +538,4 @@ class LatteFilter extends Object
 		return (is_numeric($s) || strspn($s, '\'"$')) ? $s : '"' . $s . '"';
 	}
 
-
-
-	/**
-	 * Invokes filter.
-	 * @deprecated
-	 */
-	public static function invoke($s)
-	{
-		trigger_error(__METHOD__ . '() is deprecated; use non-static __invoke() instead.', E_USER_WARNING);
-		$filter = new self;
-		return $filter->__invoke($s);
-	}
-
 }
-
-
-
-/** @deprecated */
-class CurlyBracketsFilter extends LatteFilter {}
-class CurlyBracketsMacros extends LatteMacros {}

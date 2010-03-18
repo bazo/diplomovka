@@ -129,6 +129,9 @@ class LatteMacros extends Object
 	/** @var string */
 	private $uniq;
 
+	/** @var bool */
+	private $oldSnippetMode = TRUE;
+
 	/**#@+ @ignore internal block type */
 	const BLOCK_NAMED = 1;
 	const BLOCK_CAPTURE = 2;
@@ -199,8 +202,13 @@ class LatteMacros extends Object
 		if ($this->namedBlocks || $this->extends) {
 			$s = "<?php\n"
 				. 'if ($_cb->extends) { ob_start(); }' . "\n"
+				. 'elseif (isset($presenter, $control) && $presenter->isAjax()) { LatteMacros::renderSnippets($control, $_cb, get_defined_vars()); }' . "\n"
 				. '?>' . $s . "<?php\n"
 				. 'if ($_cb->extends) { ob_end_clean(); LatteMacros::includeTemplate($_cb->extends, get_defined_vars(), $template)->render(); }' . "\n";
+		} else {
+			$s = "<?php\n"
+				. 'if (isset($presenter, $control) && $presenter->isAjax()) { LatteMacros::renderSnippets($control, $_cb, get_defined_vars()); }' . "\n"
+				. '?>' . $s;
 		}
 
 		// named blocks
@@ -398,7 +406,7 @@ class LatteMacros extends Object
 	/**
 	 * {include ...}
 	 */
-	public function macroInclude($content, $modifiers)
+	public function macroInclude($content, $modifiers, $isDefinition = FALSE)
 	{
 		$destination = LatteFilter::fetchToken($content); // destination [,] [params]
 		$params = LatteFilter::formatArray($content) . ($content ? ' + ' : '');
@@ -422,10 +430,10 @@ class LatteMacros extends Object
 				$destination = $item[1];
 			}
 			$name = var_export($destination, TRUE);
-			$params .= 'get_defined_vars()';
+			$params .= $isDefinition ? 'get_defined_vars()' : '$template->getParams()';
 			$cmd = isset($this->namedBlocks[$destination]) && !$parent
-				? "call_user_func(reset(\$_cb->blocks[$name]), $params)"
-				: "LatteMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb->blocks, $name, $params)";
+				? "call_user_func(reset(\$_cb->blocks[$name]), \$_cb, $params)"
+				: "LatteMacros::callBlock" . ($parent ? 'Parent' : '') . "(\$_cb, $name, $params)";
 			return $modifiers
 				? "ob_start(); $cmd; echo " . LatteFilter::formatModifiers('ob_get_clean()', $modifiers)
 				: $cmd;
@@ -490,8 +498,15 @@ class LatteMacros extends Object
 			$top = empty($this->blocks);
 			$this->namedBlocks[$name] = $name;
 			$this->blocks[] = array(self::BLOCK_NAMED, $name, '');
-			if (!$top) {
-				return $this->macroInclude('#' . $name, $modifiers) . "{block $name}";
+			if ($name[0] === '_') { // snippet - experimental
+				$tag = LatteFilter::fetchToken($content);  // [name [,]] [tag]
+				$tag = trim($tag, '<>');
+				$namePhp = var_export(substr($name, 1), TRUE);
+				if (!$tag) $tag = 'div';
+				return "?><$tag id=\"<?php echo \$control->getSnippetId($namePhp) ?>\"><?php " . $this->macroInclude('#' . $name, $modifiers) . " ?></$tag><?php {block $name}";
+
+			} elseif (!$top) {
+				return $this->macroInclude('#' . $name, $modifiers, TRUE) . "{block $name}";
 
 			} elseif ($this->extends) {
 				return "{block $name}";
@@ -534,6 +549,10 @@ class LatteMacros extends Object
 	 */
 	public function macroSnippet($content)
 	{
+		if (substr($content, 0, 1) === ':' || !$this->oldSnippetMode) { // experimental behaviour
+			$this->oldSnippetMode = FALSE;
+			return $this->macroBlock('_' . ltrim($content, ':'), '');
+		}
 		$args = array('');
 		if ($snippet = LatteFilter::fetchToken($content)) {  // [name [,]] [tag]
 			$args[] = LatteFilter::formatString($snippet);
@@ -551,6 +570,9 @@ class LatteMacros extends Object
 	 */
 	public function macroSnippetEnd($content)
 	{
+		if (!$this->oldSnippetMode) {
+			return $this->macroBlockEnd('', '');
+		}
 		return 'array_pop($_cb->snippets)->finish(); } if (SnippetHelper::$outputAllowed) {';
 	}
 
@@ -597,7 +619,7 @@ class LatteMacros extends Object
 		list(, $name, $content) = $matches;
 		$func = '_cbb' . substr(md5($this->uniq . $name), 0, 10) . '_' . preg_replace('#[^a-z0-9_]#i', '_', $name);
 		$this->namedBlocks[$name] = "//\n// block $name\n//\n"
-			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func() { extract(func_get_arg(0))\n?>$content<?php\n}}";
+			. "if (!function_exists(\$_cb->blocks[" . var_export($name, TRUE) . "][] = '$func')) { function $func(\$_cb) { extract(func_get_arg(1))\n?>$content<?php\n}}";
 		return '';
 	}
 
@@ -785,35 +807,35 @@ class LatteMacros extends Object
 
 	/**
 	 * Calls block.
-	 * @param  array
+	 * @param  stdClass
 	 * @param  string
 	 * @param  array
 	 * @return void
 	 */
-	public static function callBlock(& $blocks, $name, $params)
+	public static function callBlock($context, $name, $params)
 	{
-		if (empty($blocks[$name])) {
+		if (empty($context->blocks[$name])) {
 			throw new InvalidStateException("Call to undefined block '$name'.");
 		}
-		$block = reset($blocks[$name]);
-		$block($params);
+		$block = reset($context->blocks[$name]);
+		$block($context, $params);
 	}
 
 
 
 	/**
 	 * Calls parent block.
-	 * @param  array
+	 * @param  stdClass
 	 * @param  string
 	 * @param  array
 	 * @return void
 	 */
-	public static function callBlockParent(& $blocks, $name, $params)
+	public static function callBlockParent($context, $name, $params)
 	{
-		if (empty($blocks[$name]) || ($block = next($blocks[$name])) === FALSE) {
+		if (empty($context->blocks[$name]) || ($block = next($context->blocks[$name])) === FALSE) {
 			throw new InvalidStateException("Call to undefined parent block '$name'.");
 		}
-		$block($params);
+		$block($context, $params);
 	}
 
 
@@ -875,6 +897,22 @@ class LatteMacros extends Object
 		}
 
 		return $cb;
+	}
+
+
+
+	public static function renderSnippets($control, $cb, $params)
+	{
+		$payload = $control->getPresenter()->getPayload();
+		if (isset($cb->blocks)) {
+			foreach ($cb->blocks as $name => $function) {
+				if ($name[0] !== '_' || !$control->isControlInvalid(substr($name, 1))) continue;
+				ob_start();
+				$function = reset($function);
+				$function($cb, $params);
+				$payload->snippets[$control->getSnippetId(substr($name, 1))] = ob_get_clean();
+			}
+		}
 	}
 
 }

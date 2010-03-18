@@ -13,7 +13,7 @@ class Student_BasePresenter extends SecurePresenter
 	{
 		$navigation = parent::createComponentMenu();
 					
-		$navigation->add('Dashboard', $this->link('Default:default'));
+		$navigation->add('Calendar', $this->link('Default:default'));
 		$navigation->add('My courses', $this->link('MyCourses:default'));
 		return $navigation;
 	}
